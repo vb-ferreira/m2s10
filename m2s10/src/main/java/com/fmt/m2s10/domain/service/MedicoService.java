@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fmt.m2s10.domain.exception.ResourceBadRequestException;
+import com.fmt.m2s10.domain.exception.ResourceNotFoundException;
 import com.fmt.m2s10.domain.model.Medico;
 import com.fmt.m2s10.domain.repository.MedicoRepository;
 import com.fmt.m2s10.dto.MedicoRequestDto;
@@ -25,24 +26,33 @@ public class MedicoService implements ICRUDService<MedicoRequestDto, MedicoRespo
 	
 	@Override
 	public List<MedicoResponseDto> obterTodos() {
+	
 		// Temporário
 		List<Medico> medicos = medicoRepository.findAll();
 		
 		return medicos.stream()
 				.map(medico -> mapper.map(medico, MedicoResponseDto.class))
 				.collect(Collectors.toList());
+	
 	}
 
 	@Override
 	public MedicoResponseDto obterPorId(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Optional<Medico> optMedico = medicoRepository.findById(id);
+		
+		if (optMedico.isEmpty()) {
+			throw new ResourceNotFoundException("Não foi possível encontrar o médico com o id: " + id);
+		} 
+		
+		return mapper.map(optMedico.get(), MedicoResponseDto.class);
+
 	}
 
 	@Override
 	public MedicoResponseDto cadastrar(MedicoRequestDto dto) {
 
-		// valida presença de nome e crm e unicidade do crm
+		// valida presença de nome e crm e unicidade do crm no request
 		validarMedico(dto);
 		
 		Medico medico = mapper.map(dto, Medico.class);
@@ -57,8 +67,17 @@ public class MedicoService implements ICRUDService<MedicoRequestDto, MedicoRespo
 
 	@Override
 	public MedicoResponseDto atualizar(MedicoRequestDto dto, Long id) {
-		// TODO Auto-generated method stub
-		return null;
+				
+		validarMedico(dto);
+		
+		Medico medico = mapper.map(dto, Medico.class);
+				
+		medico.setId(id);
+				
+		medico = medicoRepository.save(medico);
+		
+		return mapper.map(medico, MedicoResponseDto.class);
+	
 	}
 
 	@Override
@@ -80,5 +99,5 @@ public class MedicoService implements ICRUDService<MedicoRequestDto, MedicoRespo
 		}
 		
 	}
-	
+				
 }
