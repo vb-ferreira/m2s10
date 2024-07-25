@@ -30,6 +30,11 @@ public class MedicoController {
 		return ResponseEntity.ok(medicoService.obterTodos());
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<MedicoResponseDto> obterPorId(@PathVariable Long id) {
+		return ResponseEntity.ok(medicoService.obterPorId(id));
+	}
+	
 	@PostMapping
 	public ResponseEntity<MedicoResponseDto> cadastrar(@RequestBody MedicoRequestDto dto) {
 		MedicoResponseDto medico = medicoService.cadastrar(dto);
