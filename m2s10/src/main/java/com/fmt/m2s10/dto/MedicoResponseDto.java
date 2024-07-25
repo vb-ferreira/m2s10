@@ -1,37 +1,26 @@
-package com.fmt.m2s10.domain.model;
+package com.fmt.m2s10.dto;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fmt.m2s10.domain.enums.EspecialidadeEnum;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+public class MedicoResponseDto {
 
-@Entity
-public class Medico {
+    private Long id;
+    
+    private String nome;
+    
+    private String crm;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_usuario")
-	private Long id;
-	
-	@Column(nullable = false)
-	private String nome;
-	
-	@Column(nullable = false, unique = true)
-	private String crm;
-		
-	private LocalDate dataNascimento;
-	
-	private String telefone;
-	
-	@Enumerated(value = EnumType.STRING)
-	private EspecialidadeEnum especialidade;
+    @JsonSerialize
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
+
+    private String telefone;
+
+    private EspecialidadeEnum especialidade;
 
 	public Long getId() {
 		return id;
@@ -79,6 +68,6 @@ public class Medico {
 
 	public void setEspecialidade(EspecialidadeEnum especialidade) {
 		this.especialidade = especialidade;
-	}	
-	
+	}
+    
 }
