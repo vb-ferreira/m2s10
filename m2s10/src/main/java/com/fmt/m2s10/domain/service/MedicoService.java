@@ -82,8 +82,11 @@ public class MedicoService implements ICRUDService<MedicoRequestDto, MedicoRespo
 
 	@Override
 	public void deletar(Long id) {
-		// TODO Auto-generated method stub
 		
+		obterPorId(id);
+	
+		medicoRepository.deleteById(id);
+	
 	}
 
 	private void validarMedico(MedicoRequestDto dto) {
