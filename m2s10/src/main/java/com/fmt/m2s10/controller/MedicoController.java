@@ -1,8 +1,9 @@
 package com.fmt.m2s10.controller;
 
-import java.util.List;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,11 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fmt.m2s10.domain.enums.EspecialidadeEnum;
 import com.fmt.m2s10.domain.service.MedicoService;
 import com.fmt.m2s10.dto.MedicoRequestDto;
 import com.fmt.m2s10.dto.MedicoResponseDto;
+import com.fmt.m2s10.dto.MedicoResumeDto;
 
 @RestController
 @RequestMapping("/medicos")
@@ -26,9 +30,12 @@ public class MedicoController {
 	private MedicoService medicoService;
 	
 	@GetMapping
-	public ResponseEntity<List<MedicoResponseDto>> obterTodos() {
-		// Temporário
-		return ResponseEntity.ok(medicoService.obterTodos());
+	public ResponseEntity<Page<MedicoResumeDto>> obterTodos(@RequestParam(required=false) String nome, 
+			@RequestParam(required=false) EspecialidadeEnum especialidade,
+			@RequestParam(required=false) LocalDate dataNascimento,
+			@RequestParam(defaultValue="0", required=false) Integer pageSize,
+			@RequestParam(defaultValue="5", required=false) Integer offset) {
+		return ResponseEntity.ok(medicoService.obterResumoTodos(nome, especialidade, dataNascimento, pageSize, offset));
 	}
 	
 	@GetMapping("/{id}")
